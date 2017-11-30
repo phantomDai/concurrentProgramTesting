@@ -34,7 +34,7 @@ public class SimpleLinear<T> implements PQueue<T> {
      */
     @Override
     public T removeMin() {
-        for (int i = 0; i < --range; i++) {
+        for (int i = 0; i < range; i++) {
             T item = pqueue[i].get() ;
             if(item != null){
                 return item ;

@@ -3,25 +3,59 @@ package metamorphic.relations;
  * 该类实现自动在MRs文件下搜索蜕变关系并自动加入集合中
  */
 
-import java.io.File;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MRSet {
     private List<MR> MRlist;
     public MRSet() {
-//        String path = System.getProperty("user.dir")+"\\src\\metamorphic\\relations";
-//        File file = new File(path);
-//        String[] filelist = file.list();
         MR mr;
         MRlist = new ArrayList<MR>();
-        for (int i = 0; i < 26; i++) {
-            String MRFullName = "metamorphic.relations."+"MR" + String.valueOf(i+1);
-            mr = new MR(String.valueOf(i+1),MRFullName);
-            MRlist.add(mr);
+        for (int i = 1; i <= 19; i++) {
+            if (i <= 9){
+                String MRFullName = "metamorphic.relations."+"MR" + String.valueOf(i);
+                mr = new MR(String.valueOf(i+1),MRFullName);
+                MRlist.add(mr);
+            }else if (i == 10){
+                for (int j = 1; j <=3 ; j++) {
+                    String MRFullName = "metamorphic.relations."+"MR" + String.valueOf(i) + "_" + String.valueOf(j);
+                    mr = new MR(String.valueOf(i+1),MRFullName);
+                    MRlist.add(mr);
+                }
+            }else if (i == 11){
+                for (int j = 1; j <=3 ; j++) {
+                    String MRFullName = "metamorphic.relations."+"MR" + String.valueOf(i) + "_" + String.valueOf(j);
+                    mr = new MR(String.valueOf(i+1),MRFullName);
+                    MRlist.add(mr);
+                }
+            }else if (i > 11 && i <= 15){
+                String MRFullName = "metamorphic.relations."+"MR" + String.valueOf(i);
+                mr = new MR(String.valueOf(i+1),MRFullName);
+                MRlist.add(mr);
+            }else if (i == 16){
+                for (int j = 1; j <=2 ; j++) {
+                    String MRFullName = "metamorphic.relations."+"MR" + String.valueOf(i) + "_" + String.valueOf(j);
+                    mr = new MR(String.valueOf(i+1),MRFullName);
+                    MRlist.add(mr);
+                }
+            }else if (i == 17){
+                String MRFullName = "metamorphic.relations."+"MR" + String.valueOf(i);
+                mr = new MR(String.valueOf(i+1),MRFullName);
+                MRlist.add(mr);
+            }else if (i == 18){
+                for (int j = 1; j <=2 ; j++) {
+                    String MRFullName = "metamorphic.relations."+"MR" + String.valueOf(i) + "_" + String.valueOf(j);
+                    mr = new MR(String.valueOf(i+1),MRFullName);
+                    MRlist.add(mr);
+                }
+            }else if (i == 19){
+                for (int j = 1; j <=2 ; j++) {
+                    String MRFullName = "metamorphic.relations."+"MR" + String.valueOf(i) + "_" + String.valueOf(j);
+                    mr = new MR(String.valueOf(i+1),MRFullName);
+                    MRlist.add(mr);
+                }
+            }
         }
     }
 
@@ -36,23 +70,8 @@ public class MRSet {
 
     public static void main(String[] args) {
         MRSet set = new MRSet();
-        Object instance ;
-        try{
-            Class clazz = Class.forName(set.getFullMRName(0));
-            Constructor constructor = clazz.getConstructor(null);
-            instance = constructor.newInstance(null);
-            Method method = clazz.getMethod("testProgram",String.class,int.class);
-            method.invoke(instance,"SimpleLinear",0);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        for (int i = 0; i < set.size(); i++) {
+            System.out.println(set.getFullMRName(i));
         }
     }
 

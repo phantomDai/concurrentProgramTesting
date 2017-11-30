@@ -1,6 +1,6 @@
 package metamorphic.relations;
 /**
- * mr13
+ * mr11
  */
 
 import logrecorder.LogRecorder;
@@ -17,26 +17,28 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class MR13 implements MetamorphicRelations {
-    public MR13() {
+public class MR11_2 implements MetamorphicRelations{
+    private static List<String> killedMutans ;
+    public MR11_2() {
+        killedMutans = new ArrayList<String>();
     }
-
 
     @Override
     public int[] sourceList(int[] mylist) {
-        int[] sourcelist = mylist ;
-        return sourcelist;
+        return mylist;
     }
 
 
     public int[] followUpList(int[] mylist,int[] sourcetoplist) {
-        int[] followlist = mylist ;
-        for (int i = 0; i < followlist.length; i++) {
-            followlist[i] += 1 ;
+        int[] followlist = new int[mylist.length + sourcetoplist.length];
+        int[] newlist = new int[sourcetoplist.length] ;
+        for (int i = 0; i < sourcetoplist.length; i++) {
+            newlist[i] = sourcetoplist[sourcetoplist.length - 1 - i];
         }
+        System.arraycopy(newlist,0,followlist,0,newlist.length);
+        System.arraycopy(mylist,0,followlist,newlist.length,mylist.length);
         return followlist;
     }
-
     private static final int NUMBEROFLIST = 10;
     private static final int NUMBEROFELEMENT = 1024 ;
     private static final int TOPLENGTH = 10;
@@ -109,16 +111,16 @@ public class MR13 implements MetamorphicRelations {
 //                        System.out.print(getlisttwo[k]+",");
 //                    }
 
+
+
+
+
                     //判断原始最优序列与衍生最优序列是否违反了蜕变关系,并作好记录
                     boolean flag = isConformToMR(getlist,getlisttwo,i,ms.getMutantFullName(j),loopTimes);
-
-
-
-
                     if (!flag){
                         String str = ms.getMutantFullName(j);
                         killedmutants.add(String.valueOf(ms.getMutantID(str)));
-                        mutantBeKilledInfo.add(loopTimes,testpriorityName,"MR13",ms.getMutantFullName(j));
+                        mutantBeKilledInfo.add(loopTimes,testpriorityName,"MR11_2",ms.getMutantFullName(j));
                     }
 
                 } catch (IllegalAccessException e) {
@@ -139,7 +141,7 @@ public class MR13 implements MetamorphicRelations {
             tempInfoList.clear();
             tempInfoList.add(String.valueOf(i));//记录序列信息
             tempInfoList.add(String.valueOf(loopTimes));//记录第几次重复试验
-            tempInfoList.add("MR13");//记录MR信息
+            tempInfoList.add("MR11_2");//记录MR信息
             tempInfoList.add(String.valueOf(ms.size()));//记录所有的变异体个数
             if (killedmutants.size() == 0){
                 tempInfoList.add("无");
@@ -158,7 +160,7 @@ public class MR13 implements MetamorphicRelations {
             //将此次的执行信息加入到二位的list中以便写入excel中
             reportKilledInfo.add(tempInfoList);
         }
-        reportMRKilledInfo(testpriorityName,"MR13",MRKilledInfo);
+        reportMRKilledInfo(testpriorityName,"MR11_2",MRKilledInfo);
         LogRecorder logRecorder = new LogRecorder();
         logRecorder.writeToEXCEL(testpriorityName,loopTimes,reportKilledInfo);
     }
@@ -170,9 +172,6 @@ public class MR13 implements MetamorphicRelations {
      * @return {flag} true为没有揭示变异体，false为揭示了变异体
      */
     private boolean isConformToMR(int[] sourceToplist,int[] followToplist,int seed,String SUTFullName,int loopTimes){
-        for (int i = 0; i < sourceToplist.length; i++) {
-            sourceToplist[i] += 1;
-        }
         if (Arrays.equals(sourceToplist,followToplist)){
             return true;
         }else {
@@ -185,7 +184,7 @@ public class MR13 implements MetamorphicRelations {
                 follow = follow + String.valueOf(followToplist[i] + ", ");
             }
             String report = SUTFullName + "在第" + String.valueOf(seed) + "个序列的第" + String.valueOf(loopTimes) + "次重复试验，两次执行结果违反了" +
-                    "蜕变关系MR13：原始最优序列为：" + source + "衍生最优序列为：" + follow;
+                    "蜕变关系MR11_2：原始最优序列为：" + source + "衍生最优序列为：" + follow;
             WrongReport wrongReport = new WrongReport();
             wrongReport.writeLog(SUTFullName,report);
             return false;
@@ -196,7 +195,7 @@ public class MR13 implements MetamorphicRelations {
         List<String> temp = new ArrayList<String>();
         MRKilledInfoRecorder mr = new MRKilledInfoRecorder();
         if (list.size() == 0){
-            mr.write(SUTName,"MR13",0);
+            mr.write(SUTName,"MR11_2",0);
         }else{
             for (int i = 0; i < list.size(); i++) {
                 List<String> sublist = list.get(i);
@@ -206,16 +205,13 @@ public class MR13 implements MetamorphicRelations {
                     }
                 }
             }
-            mr.write(SUTName,"MR13",temp.size());
+            mr.write(SUTName,"MR11_2",temp.size());
         }
     }
 
     public static void main(String[] args) {
-        MR13 mr = new MR13();
-        LogRecorder.creatTableAndTitle("FineGrainedHeap");
-        for (int i = 0; i < 1; i++) {
-            mr.testProgram("FineGrainedHeap",i);
-        }
+        MR11_2 mr = new MR11_2();
+        mr.testProgram("SimpleLinear",0);
     }
 
 

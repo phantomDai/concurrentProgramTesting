@@ -27,8 +27,9 @@ public class test {
 
 
     public static void main(String[] args) throws IOException {
-        String elementPath = "//element[@id='" + String.valueOf(1) + "']" ;
-        System.out.println(elementPath);
+        for (int i = 0; i < 10; i++) {
+            System.out.println(~i);
+        }
 
 
 

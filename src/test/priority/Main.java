@@ -16,27 +16,21 @@ import java.util.List;
  */
 public class Main {
     public Main() {}
-
     private static final int loops = 10;
-
     public static void main(String[] args){
-        String[] SUTName = {"SimpleLinear", "SimpleTree", "SequentialHeap", "SkipQueue","FineGrainedHeap"};
-//        String[] SUTName = {"FineGrainedHeap"};
+//        String[] SUTName = {"SimpleLinear", "SimpleTree", "SequentialHeap", "SkipQueue","FineGrainedHeap"};
+        String[] SUTName = {"SimpleLinear"};
         for (int i = 0; i < SUTName.length; i++) {
             LogRecorder.creatTableAndTitle(SUTName[i]);
         }
         MutationScore mutationScore = new MutationScore();
         for (int j = 0; j < SUTName.length; j++) {//对所有的SUT进行测试
             for (int i = 0; i < Main.loops; i++) {//控制重复实验的次数
-
-
                 //获得所有的蜕变关系
                 MRSet mrSet = new MRSet();
                 System.out.println(mrSet.getFullMRName(j));
                 for (int k = 0; k < mrSet.size(); k++) {//原始序列在所有的蜕变关系上作用
-                    if (k == 7) {//由于MR8有问题因此不对其进行测试
-                        continue;
-                    } else {
+
                         Object instance = null ;
                         try{
                             Class clazz = Class.forName(mrSet.getFullMRName(k));
@@ -55,7 +49,7 @@ public class Main {
                         } catch (InvocationTargetException e) {
                             e.printStackTrace();
                         }
-                    }
+
                 }//所有的MR测试完毕
             }//执行了所有规定的重复次数
             //计算变异得分

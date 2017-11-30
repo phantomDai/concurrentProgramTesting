@@ -26,7 +26,7 @@ public class MR5 implements MetamorphicRelations {
         int[] followlist = new int[mylist.length + 1] ;
         //在toplist中随机选取一个数
         Random random = new Random();
-        int next = random.nextInt(toplist.length - 1 );
+        int next = random.nextInt(toplist.length);
         int inserteditem = toplist[next] ;
         for (int i = 0; i < followlist.length; i++) {
             if (i < mylist.length)

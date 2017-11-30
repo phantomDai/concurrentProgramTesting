@@ -38,8 +38,16 @@ public class MR8 implements MetamorphicRelations {
         int length = random.nextInt(sourcetoplist.length) + 1;
         this.local = length;
         int[] sublist = new int[length];
+        List<Integer> list = new ArrayList<Integer>();//去掉重复的值
         for (int i = 0; i < length; i++) {
-            sublist[i] = - (random.nextInt(1024) + 1);
+            while(true){
+                int temp = random.nextInt(15);
+                if (!list.contains(temp)){
+                    list.add(temp);
+                    sublist[i] = temp;
+                    break;
+                }
+            }
         }
         addlist = sublist;
         int[] newlist = new int[mylist.length + length];
@@ -82,14 +90,7 @@ public class MR8 implements MetamorphicRelations {
                     List<Integer> templist = new ArrayList<Integer>();
                     templist.clear();
                     for (int h = 0; h < temp.length; h++) {
-                        int data = random.nextInt(1024);
-//                        while (data <30){
-//                            if (templist.contains(data)){
-//                                data = random.nextInt(1024);
-//                            }else {
-//                                break;
-//                            }
-//                        }
+                        int data = random.nextInt(1009) + 15;
                         templist.add(data);
                     }
                     for (int k = 0; k < templist.size(); k++) {
@@ -202,7 +203,32 @@ public class MR8 implements MetamorphicRelations {
      * @return {flag} true为没有揭示变异体，false为揭示了变异体
      */
     private boolean isConformToMR(int[] sourceToplist,int[] followToplist,int seed,String SUTFullName,int loopTimes){
-        if (Arrays.equals(sourceToplist,followToplist)){
+        boolean flag = true ;
+        Arrays.sort(addlist);
+        if (addlist.length == 10){
+            if (Arrays.equals(addlist,followToplist))
+                flag = true;
+            else
+                flag = false;
+        }else {
+            //创建一个预期的数组
+            int[] temp = new int[sourceToplist.length];
+            //构造预期数组
+            for (int i = 0; i < sourceToplist.length; i++) {
+                if (i < addlist.length)
+                    temp[i] = addlist[i];
+                else
+                    temp[i] = sourceToplist[i - addlist.length];
+            }
+            Arrays.sort(temp);
+
+            //将构造的数组与原始数组进行比较,若想等则为true
+            if (Arrays.equals(temp,followToplist))
+                flag = true;
+            else
+                flag = false;
+        }
+        if (flag){
             return true;
         }else {
             String source = "";
@@ -211,10 +237,14 @@ public class MR8 implements MetamorphicRelations {
             }
             String follow = "";
             for (int i = 0; i < followToplist.length; i++) {
-                follow = follow + String.valueOf(sourceToplist[i] + ", ");
+                follow = follow + String.valueOf(followToplist[i] + ", ");
+            }
+            String add = "";
+            for (int i = 0; i < addlist.length; i++) {
+                add = add + String.valueOf(addlist[i] + ", ");
             }
             String report = SUTFullName + "在第" + String.valueOf(seed) + "个序列的第" + String.valueOf(loopTimes) + "次重复试验，两次执行结果违反了" +
-                    "蜕变关系MR8：原始最优序列为：" + source + "衍生最优序列为：" + follow;
+                    "蜕变关系MR8：原始最优序列为：" + source + "衍生最优序列为：" + follow + "addlist:" + add;
             WrongReport wrongReport = new WrongReport();
             wrongReport.writeLog(SUTFullName,report);
             return false;
@@ -237,6 +267,21 @@ public class MR8 implements MetamorphicRelations {
             }
             mr.write(SUTName,"MR8",temp.size());
         }
+    }
+
+    public static void main(String[] args) {
+        MR8 mr = new MR8();
+        mr.testProgram("SimpleLinear",0);
+//        int[] mylist = {17,18,19,20,21,22,23,24,25,26,27,28,29,30};
+//        int[] toplist = {17,18,19,20,21,22,23,24,25,26};
+//        int[] follow = mr.followUpList(mylist,toplist);
+//        System.out.println("\rfollow:");
+//        for (int i = 0; i < follow.length; i++) {
+//            System.out.print(follow[i] + ",");
+//        }
+
+
+
     }
 
 

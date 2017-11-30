@@ -35,7 +35,7 @@ public class MR1 implements MetamorphicRelations {
         int[] followlist = new int[mylist.length];
         List<Integer> list = new ArrayList<Integer>();
         Random random = new Random();
-        //产生1023个不重复的值
+
         for (int i = 0; i < templist.length; i++) {
             int n = random.nextInt(mylist.length);
             while(list.contains(n))
@@ -64,7 +64,7 @@ public class MR1 implements MetamorphicRelations {
             //总时间
             long totalTime = 0 ;
 
-            for (int j = 149; j < 150; j++) {//对每一个变异体进行测试
+            for (int j = 0; j < ms.size(); j++) {//对每一个变异体进行测试
                 System.out.println("test begin:" + ms.getMutantFullName(j));
                 try{
                     //~~~~~~~~~~~~~~~~~~~~对象、构造器、实例、方法~~~~~~~~~~~~~~~~~//

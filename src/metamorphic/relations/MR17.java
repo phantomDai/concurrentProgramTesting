@@ -1,8 +1,9 @@
 package metamorphic.relations;
 /**
- * mr13
+ * mr17
  */
 
+import generatelist.BinList;
 import logrecorder.LogRecorder;
 import logrecorder.MRKilledInfoRecorder;
 import logrecorder.MutantBeKilledInfo;
@@ -12,14 +13,10 @@ import set.mutants.MutantSet;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class MR17 implements MetamorphicRelations {
-    public MR17() {
-    }
+    public MR17() { }
 
 
     @Override
@@ -27,15 +24,23 @@ public class MR17 implements MetamorphicRelations {
         int[] sourcelist = mylist ;
         return sourcelist;
     }
-
-
-    public int[] followUpList(int[] mylist,int[] sourcetoplist) {
-        int[] followlist = mylist ;
-        for (int i = 0; i < followlist.length; i++) {
-            followlist[i] += 1 ;
+    public BinList[] followUpList(int[] mylist){
+        BinList[] binlists = new BinList[2] ;
+        for (int i = 0; i < binlists.length; i++) {
+            binlists[i] = new BinList();
         }
-        return followlist;
+        Random random = new Random();
+        int local = random.nextInt(724) + 200;//得到断开原始序列的位置
+
+        for (int i = 0; i < mylist.length; i++) {
+            if (i < local)
+                binlists[0].put(mylist[i]);
+            else
+                binlists[1].put(mylist[i]);
+        }
+        return binlists ;
     }
+
 
     private static final int NUMBEROFLIST = 10;
     private static final int NUMBEROFELEMENT = 1024 ;
@@ -43,6 +48,7 @@ public class MR17 implements MetamorphicRelations {
     private int threads = 10 ;
     private List<List<String>> reportKilledInfo = new ArrayList<List<String>>();
     private List<List<String>> MRKilledInfo = new ArrayList<List<String>>();
+
     public void testProgram(String testpriorityName,int loopTimes){
 
         for (int i = 0; i < NUMBEROFLIST; i++) { //产生序列对应的种子为1-10
@@ -60,62 +66,75 @@ public class MR17 implements MetamorphicRelations {
                 System.out.println("test begin:" + ms.getMutantFullName(j));
                 try{
                     //~~~~~~~~~~~~~~~~~~~~对象、构造器、实例、方法~~~~~~~~~~~~~~~~~//
-                    Class clazz = Class.forName("test.priority." + testpriorityName);
+                    Class clazz = Class.forName("test.priority."+testpriorityName);
                     Constructor constructor = clazz.getConstructor(int.class);
-                    Object instance = constructor.newInstance(threads);//toplist的大小
-                    Object instance_follow = constructor.newInstance(threads);
+                    Object instance = constructor.newInstance(threads);
+                    Object instance_follow1 = constructor.newInstance(threads);
+                    Object instance_follow2 = constructor.newInstance(threads);
+                    Object instance_follow3 = constructor.newInstance(threads);
                     Method method = clazz.getMethod("testRemoveMin", int[].class, String.class);
                     //~~~~~~~~~~~~~~~~~~原始序列~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
                     Random random = new Random(i+1);
                     int[] temp = new int[NUMBEROFELEMENT];
-                    List<Integer> templist = new ArrayList<Integer>();
-                    templist.clear();
                     for (int h = 0; h < temp.length; h++) {
-                        int data = random.nextInt(1024);
-//                        while (data <30){
-//                            if (templist.contains(data)){
-//                                data = random.nextInt(1024);
-//                            }else {
-//                                break;
-//                            }
-//                        }
-                        templist.add(data);
+                        temp[h] = random.nextInt(1024);
                     }
-                    for (int k = 0; k < templist.size(); k++) {
-                        temp[k] = templist.get(k);
-                    }
-
                     int[] source = sourceList(temp);//获得原始序列
+
 
                     long startTime = System.currentTimeMillis();
                     method.invoke(instance,source,ms.getMutantFullName(j));//在原始序列下进行测试
                     Method get = clazz.getMethod("getTop", null);//获得最优序列的方法
-
                     int[] getlist = (int[]) get.invoke(instance, null);//获得原始最优序列
+                    BinList[] follow = followUpList(source); //获得衍生序列
+                    int[] follow1 = new int[follow[0].list.size()];
+                    int[] follow2 = new int[follow[1].list.size()];
+                    for (int k = 0; k < follow[0].list.size(); k++) {
+                        follow1[k] = follow[0].list.get(k);
+                    }
+                    for (int k = 0; k < follow[1].list.size(); k++) {
+                        follow2[k] = follow[1].list.get(k);
+                    }
 
-                    int[] follow = followUpList(source, getlist); //获得衍生序列
 
-                    method.invoke(instance_follow, follow, ms.getMutantFullName(j));
-                    int[] getlisttwo = (int[]) get.invoke(instance_follow, null);//获得衍生最优序列
 
+
+                    method.invoke(instance_follow1, follow1, ms.getMutantFullName(j));
+                    int[] getlisttwo_1 = (int[]) get.invoke(instance_follow1, null);//获得衍生最优序列
+                    method.invoke(instance_follow2,follow2,ms.getMutantFullName(j));
+                    int[] getlisttwo_2 = (int[]) get.invoke(instance_follow2,null);
+                    //将两个衍生序列的最优序列合并
+                    int[] addlist = new int[getlisttwo_1.length+getlisttwo_2.length];
+                    System.arraycopy(getlisttwo_1,0,addlist,0,getlisttwo_1.length);
+                    System.arraycopy(getlisttwo_2,0,addlist,getlisttwo_1.length,getlisttwo_2.length);
+                    method.invoke(instance_follow3,addlist,ms.getMutantFullName(j));
+                    int[] finallist = (int[]) get.invoke(instance_follow3,null);
                     long endTime = System.currentTimeMillis();
                     totalTime = totalTime + (endTime - startTime) ;
 
-//                    for (int k = 0; k < getlist.length; k++) {
-//                        System.out.print(getlist[k]+",");
-//                    }
-//                    System.out.println();
-//                    for (int k = 0; k < getlisttwo.length; k++) {
-//                        System.out.print(getlisttwo[k]+",");
-//                    }
+
+                    for (int k = 0; k < getlist.length; k++) {
+                        System.out.print(getlist[k]+",");
+                    }
+                    System.out.println();
+                    for (int k = 0; k < getlisttwo_1.length; k++) {
+                        System.out.print(getlisttwo_1[k]+",");
+                    }
+                    System.out.println();
+                    for (int k = 0; k < getlisttwo_2.length; k++) {
+                        System.out.print(getlisttwo_2[k]+",");
+                    }
+
+
+
+
+
+
 
                     //判断原始最优序列与衍生最优序列是否违反了蜕变关系,并作好记录
-                    boolean flag = isConformToMR(getlist,getlisttwo,i,ms.getMutantFullName(j),loopTimes);
-
-
-
-
+                    boolean flag = isConformToMR(getlist,finallist,i,ms.getMutantFullName(j),loopTimes);
                     if (!flag){
+
                         String str = ms.getMutantFullName(j);
                         killedmutants.add(String.valueOf(ms.getMutantID(str)));
                         mutantBeKilledInfo.add(loopTimes,testpriorityName,"MR17",ms.getMutantFullName(j));
@@ -163,16 +182,7 @@ public class MR17 implements MetamorphicRelations {
         logRecorder.writeToEXCEL(testpriorityName,loopTimes,reportKilledInfo);
     }
 
-    /**
-     * 判断原始最优序列以及衍生最优序列是否违反了蜕变关系
-     * @param sourceToplist 原始最优序列
-     * @param followToplist 衍生最优序列
-     * @return {flag} true为没有揭示变异体，false为揭示了变异体
-     */
     private boolean isConformToMR(int[] sourceToplist,int[] followToplist,int seed,String SUTFullName,int loopTimes){
-        for (int i = 0; i < sourceToplist.length; i++) {
-            sourceToplist[i] += 1;
-        }
         if (Arrays.equals(sourceToplist,followToplist)){
             return true;
         }else {
@@ -210,12 +220,36 @@ public class MR17 implements MetamorphicRelations {
         }
     }
 
+
     public static void main(String[] args) {
         MR17 mr = new MR17();
         LogRecorder.creatTableAndTitle("FineGrainedHeap");
         for (int i = 0; i < 1; i++) {
             mr.testProgram("FineGrainedHeap",i);
         }
+//        Random random = new Random(1);
+//        int[] mylist = new int[1024];
+//        for (int i = 0; i < 1024; i++) {
+//            mylist[i] = random.nextInt(1024);
+//        }
+//        BinList[] binLists = new BinList[2];
+//        for (int i = 0; i < binLists.length; i++) {
+//          binLists[i] = new BinList();
+//        }
+//        binLists = mr.followUpList(mylist);
+//        System.out.println("1 list的长度："+binLists[0].list.size());
+//        System.out.println("2 list的长度"+binLists[1].list.size());
+//        Collections.sort(binLists[0].list);
+//        Collections.sort(binLists[1].list);
+//        for (int i = 0; i < binLists[0].list.size(); i++) {
+//            System.out.print(binLists[0].list.get(i)+",");
+//        }
+//        System.out.println();
+//        for (int i = 0; i < binLists[1].list.size(); i++) {
+//            System.out.print(binLists[1].list.get(i)+",");
+//        }
+
+
     }
 
 

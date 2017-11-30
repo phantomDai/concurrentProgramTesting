@@ -24,7 +24,8 @@ public class SimpleLinear {
     Thread[] thread ;
     private volatile int addToVector = 0;
 
-
+    Method method_add;
+    Method method_remove;
     public SimpleLinear(int mythreads){
         this.THREADS = mythreads;
         thread = new Thread[mythreads];
@@ -41,17 +42,18 @@ public class SimpleLinear {
             clazz = Class.forName(mymutantFullName);
             constructor = clazz.getConstructor(int.class) ;
             Arrays.sort(list);
-            int temp = list[list.length-1];
 
+            mutantInstance = constructor.newInstance(10240);
+            //向序列中添加元素的方法
+            method_add = clazz.getMethod(METHODNAME_ADD,Object.class,int.class);
 
-            mutantInstance = constructor.newInstance(list.length+1024);
-            Method method_add = clazz.getMethod(METHODNAME_ADD,Object.class,int.class);
             //向变异体对象中添加元素
-
             for (int i = 0; i < list.length; i++) {
                 method_add.invoke(mutantInstance,list[i],list[i]);
             }
             //多线程移除优先级最高的十个元素
+            /*初始化移除元素的方法*/
+            method_remove = clazz.getMethod(METHODNAME_REMOVEMIN,null);
             for (int i = 0; i < THREADS; i++) {
                 thread[i] = new RemoveMinThread();
             }
@@ -65,14 +67,6 @@ public class SimpleLinear {
                     e.printStackTrace();
                 }
             }
-            //判断vector中是否有重复元素
-            Vector<Integer> tempVector = new Vector<Integer>();
-            for (int i = 0; i < vector.size(); i++) {
-                if(!tempVector.contains(vector.get(i))){
-                    tempVector.add(vector.get(i));
-                }
-            }
-
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -125,47 +119,38 @@ public class SimpleLinear {
         }
     }
 
-    class RemoveMinThread extends Thread{
 
-        RemoveMinThread(){ }
-        public void run(){
-            addElementToVector();
+    /*向vector中添加元素,同一时间只能有一个线程访问*/
+    private synchronized boolean addElements(Object element){
+        if (element == null){
+            Random random = new Random();
+            vector.add(random.nextInt(824));
+            return true;
+        }else {
+            int temp = (int) element;
+            if (vector.contains(temp))
+                return false;
+            else{
+                vector.add(temp);
+                return true;
+            }
         }
     }
 
 
-
-
-    public static void main(String[] args) {
-        Random random = new Random(1);
-        int[] test = new int[1024] ;
-        List<Integer> list = new ArrayList<Integer>();
-        for (int i = 0; i < test.length; i++) {
-            int temp = random.nextInt(1024);
-            while (temp < 30) {
-                if (list.contains(temp)){
-                    temp = random.nextInt(1024);
-                }else{
-                    list.add(temp);
+    class RemoveMinThread extends Thread{
+        volatile boolean flag = false;//标志位
+        public void run(){
+            while(!flag){
+                try{
+                    Object result = method_remove.invoke(mutantInstance,null);
+                    flag = addElements(result);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
                 }
             }
-            list.add(temp);
-        }
-
-        for (int i = 0; i < test.length; i++) {
-            test[i] = list.get(i);
-        }
-//        Arrays.sort(test);
-//        for (int i = 0; i < test.length; i++) {
-//            System.out.print(test[i]+",");
-//        }
-
-
-        SimpleLinear simpleLinearTest = new SimpleLinear(10);
-        simpleLinearTest.testRemoveMin(test,"mutants.SimpleLinear.AOIS_17.SimpleLinear");
-        int[] vector = simpleLinearTest.getTop();
-        for (int i = 0; i < vector.length; i++) {
-            System.out.print(vector[i] + ", ");
         }
     }
 

@@ -33,9 +33,9 @@ public class MR6 implements MetamorphicRelations {
         for (int i = 0; i < k; i++) {
             List<Integer> templist = new ArrayList<Integer>();
             templist.clear();
-            int templength = random.nextInt(toplist.length-1);//生成子序列的随机长度
+            int templength = random.nextInt(toplist.length - 1);//生成子序列的随机长度
             while(templength == 0){
-                templength = random.nextInt(toplist.length-1);
+                templength = random.nextInt(toplist.length - 1);
             }
             for (int j = 0; j < templength; j++) {
                 int tempitem = random.nextInt(toplist.length);
@@ -222,9 +222,9 @@ public class MR6 implements MetamorphicRelations {
 
     public static void main(String[] args) {
         MR6 mr = new MR6();
-        LogRecorder.creatTableAndTitle("SkipQueue");
+        LogRecorder.creatTableAndTitle("SimpleLinear");
         for (int i = 0; i < 20; i++) {
-            mr.testProgram("SkipQueue",0);
+            mr.testProgram("SimpleLinear",i);
         }
 
     }

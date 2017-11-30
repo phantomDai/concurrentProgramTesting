@@ -1,39 +1,70 @@
 package metamorphic.relations;
 /**
- * mr10
+ * mr12
  */
 
 import logrecorder.LogRecorder;
 import logrecorder.MRKilledInfoRecorder;
 import logrecorder.MutantBeKilledInfo;
 import logrecorder.WrongReport;
+import org.apache.commons.lang3.ArrayUtils;
 import set.mutants.MutantSet;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 public class MR12 implements MetamorphicRelations{
     private static List<String> killedMutans ;
+    private static int[] sourcetoplist;
+    private static int[] tempx; //生成的x序列
+    private static int NUMBERRANGE = 2000 ;
     public MR12() {
         killedMutans = new ArrayList<String>();
+        sourcetoplist = new int[10];
     }
-
     @Override
     public int[] sourceList(int[] mylist) {
         return mylist;
     }
 
-
     public int[] followUpList(int[] mylist,int[] sourcetoplist) {
-        MR1 mr1 = new MR1();
-        int[] newlist = mr1.followUpList(sourcetoplist,sourcetoplist);
-        int[] followlist = new int[mylist.length + sourcetoplist.length];
-        System.arraycopy(mylist,0,followlist,0,mylist.length);
-        System.arraycopy(newlist,0,followlist,mylist.length,newlist.length);
-        return followlist;
+        this.sourcetoplist = sourcetoplist;
+        Random random = new Random();
+        int sublength = random.nextInt(mylist.length - 9) + 10;
+        int[] x = new int[sublength];
+        for (int i = 0; i < x.length; i++) {
+            x[i] = random.nextInt(NUMBERRANGE);
+        }
+        this.tempx = x ;
+        List<Integer> tempsourcelist = new ArrayList<Integer>();
+        for (int i = 0; i < mylist.length; i++) {
+            tempsourcelist.add(mylist[i]);
+        }
+
+        System.out.println();
+
+        List<Integer> tempxlist = Arrays.asList(ArrayUtils.toObject(x));
+        for (int i = 0; i < tempxlist.size(); i++) {
+            for (int j = 0; j < tempsourcelist.size(); j++) {
+                if (tempsourcelist.get(j) == tempxlist.get(i)){
+                    tempsourcelist.remove(j);
+                    break;
+                }
+            }
+        }
+        int[] returnlist = new int[tempsourcelist.size()];
+        for (int i = 0; i < tempsourcelist.size(); i++) {
+            returnlist[i] = tempsourcelist.get(i);
+        }
+
+        return returnlist;
     }
+
     private static final int NUMBEROFLIST = 10;
     private static final int NUMBEROFELEMENT = 1024 ;
     private static final int TOPLENGTH = 10;
@@ -106,12 +137,12 @@ public class MR12 implements MetamorphicRelations{
 //                        System.out.print(getlisttwo[k]+",");
 //                    }
 
-
-
-
-
                     //判断原始最优序列与衍生最优序列是否违反了蜕变关系,并作好记录
                     boolean flag = isConformToMR(getlist,getlisttwo,i,ms.getMutantFullName(j),loopTimes);
+
+
+
+
                     if (!flag){
                         String str = ms.getMutantFullName(j);
                         killedmutants.add(String.valueOf(ms.getMutantID(str)));
@@ -160,7 +191,6 @@ public class MR12 implements MetamorphicRelations{
         logRecorder.writeToEXCEL(testpriorityName,loopTimes,reportKilledInfo);
     }
 
-
     /**
      * 判断原始最优序列以及衍生最优序列是否违反了蜕变关系
      * @param sourceToplist 原始最优序列
@@ -168,7 +198,36 @@ public class MR12 implements MetamorphicRelations{
      * @return {flag} true为没有揭示变异体，false为揭示了变异体
      */
     private boolean isConformToMR(int[] sourceToplist,int[] followToplist,int seed,String SUTFullName,int loopTimes){
-        if (Arrays.equals(sourceToplist,followToplist)){
+
+        List<Integer> tempxlist = Arrays.asList(ArrayUtils.toObject(tempx));
+        List<Integer> xliststar = new ArrayList<Integer>();
+        for (int i = 0; i < sourceToplist.length; i++) {
+            if (tempxlist.contains(sourceToplist[i])){
+                xliststar.add(sourceToplist[i]);
+            }
+        }
+
+
+
+        int[] temp = new int[followToplist.length + xliststar.size()];
+        for (int i = 0; i < temp.length; i++) {
+            if (i < xliststar.size()){
+                temp[i] = xliststar.get(i);
+            }else {
+                temp[i] = followToplist[i-xliststar.size()];
+            }
+        }
+        Arrays.sort(temp);//将xstar与followlist合并之后的排序结果
+        List<Integer> templist = Arrays.asList(ArrayUtils.toObject(temp));
+        boolean flag = true ;//标志位如果符合蜕变关系则为true，否则为false
+        for (int i = 0; i < sourceToplist.length; i++) {
+            if (!templist.contains(sourceToplist[i])){
+                flag = false ;
+                break;
+            }
+        }
+
+        if (flag){
             return true;
         }else {
             String source = "";
@@ -207,7 +266,12 @@ public class MR12 implements MetamorphicRelations{
 
     public static void main(String[] args) {
         MR12 mr = new MR12();
-        mr.testProgram("SimpleLinear",0);
+        LogRecorder.creatTableAndTitle("FineGrainedHeap");
+        for (int i = 0; i < 1; i++) {
+            mr.testProgram("FineGrainedHeap",i);
+        }
+
     }
+
 
 }
