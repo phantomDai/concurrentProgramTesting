@@ -9,9 +9,7 @@ import java.util.ArrayList;
  */
 public class Bin<T> {
     List<T> list;
-    public Bin() {
-        list = new ArrayList<T>();
-    }
+    public Bin() { list = new ArrayList<T>(); }
 
     synchronized void put(T item) {
         list.add(item);
