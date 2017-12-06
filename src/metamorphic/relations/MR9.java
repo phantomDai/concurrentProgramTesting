@@ -232,9 +232,9 @@ public class MR9 implements MetamorphicRelations {
 
     public static void main(String[] args) {
         MR9 mr = new MR9();
-        LogRecorder.creatTableAndTitle("FineGrainedHeap");
+        LogRecorder.creatTableAndTitle("SimpleTree");
         for (int i = 0; i < 1; i++) {
-            mr.testProgram("FineGrainedHeap",i);
+            mr.testProgram("SimpleTree",i);
         }
     }
 

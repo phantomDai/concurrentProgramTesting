@@ -214,7 +214,7 @@ public class MR13 implements MetamorphicRelations {
         MR13 mr = new MR13();
         LogRecorder.creatTableAndTitle("FineGrainedHeap");
         for (int i = 0; i < 1; i++) {
-            mr.testProgram("FineGrainedHeap",i);
+            mr.testProgram("SimpleTree",i);
         }
     }
 

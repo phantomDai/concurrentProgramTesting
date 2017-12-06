@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 public class TestBegin {
-    private static final int LOOPS = 1 ;
+    private static final int LOOPS = 10 ;
     /**
      * 传入要测试的软件的名字进行测试
      * @param SUTName 传入的待测程序的名字列表

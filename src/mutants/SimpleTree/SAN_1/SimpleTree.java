@@ -10,7 +10,6 @@
 
 package mutants.SimpleTree.SAN_1;
 
-import mutants.SimpleTree.SAN_1.PQueue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Simple tree-based bounded priority queue
- * @param {T} item type
+ * @param T item type
  * @author Maurice Herlihy
  */
 public class SimpleTree<T> implements PQueue<T> {
@@ -57,8 +56,8 @@ public class SimpleTree<T> implements PQueue<T> {
     while(node != root) {
       TreeNode parent = node.parent;
       if (node == parent.left) { // increment if ascending from left
-        int temp = parent.counter.get();
-                parent.counter.set(temp+1);
+        parent.counter.getAndIncrement();
+		//parent.counter.set(++parent.counter.get());
       }
       node = parent;
     }
@@ -67,8 +66,9 @@ public class SimpleTree<T> implements PQueue<T> {
   public T removeMin() {
     TreeNode node = root;
     while(!node.isLeaf()) {
-      if (node.counter.getAndDecrement() > 0 ) {
-        node = node.left;
+      if (node.counter.get() > 0 ) {
+		node.counter.set(node.counter.get() - 1);
+		node = node.left;
       } else {
         node = node.right;
       }

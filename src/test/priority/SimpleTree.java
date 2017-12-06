@@ -11,7 +11,7 @@ import java.util.*;
 * @author <phantom>
 */ 
 public class SimpleTree {
-    static final int LOG_RANGE = 11 ; //the depth of tree
+    static final int LOG_RANGE = 15 ; //the depth of tree
     static final int TEST_SIZE = 1024 ; //the numbers of queue
     private int THREADS = 10 ; //the numbers of threads
     Vector<Integer> vector = new Vector<Integer>();//存放每次线程执行的结果
@@ -22,7 +22,8 @@ public class SimpleTree {
     private Constructor constructor = null ;
     Thread[] thread ;
     private volatile int addToVector = 0;
-
+    Method method_add;
+    Method method_remove;
     public SimpleTree (int mythreads){
         this.THREADS = mythreads;
         thread = new Thread[mythreads];
@@ -40,13 +41,15 @@ public class SimpleTree {
             constructor = clazz.getConstructor(int.class) ;
 
             mutantInstance = constructor.newInstance(LOG_RANGE);
-            Method method_add = clazz.getMethod(METHODNAME_ADD,Object.class,int.class);
+            method_add = clazz.getMethod(METHODNAME_ADD,Object.class,int.class);
             //向变异体对象中添加元素
 
             for (int i = 0; i < list.length; i++) {
                 method_add.invoke(mutantInstance,list[i],list[i]);
             }
             //多线程移除优先级最高的十个元素
+            /*初始化移除元素的方法*/
+            method_remove = clazz.getMethod(METHODNAME_REMOVEMIN,null);
             for (int i = 0; i < THREADS; i++) {
                 thread[i] = new RemoveMinThread();
             }
@@ -121,11 +124,36 @@ public class SimpleTree {
         }
     }
 
-    class RemoveMinThread extends Thread{
+    /*向vector中添加元素,同一时间只能有一个线程访问*/
+    private synchronized boolean addElements(Object element){
+        if (element == null){
+            Random random = new Random();
+            vector.add(random.nextInt(824));
+            return true;
+        }else {
+            int temp = (int) element;
+            if (vector.contains(temp))
+                return false;
+            else{
+                vector.add(temp);
+                return true;
+            }
+        }
+    }
 
-        RemoveMinThread(){ }
+    class RemoveMinThread extends Thread{
+        volatile boolean flag = false;//标志位
         public void run(){
-            addElementToVector();
+            while(!flag){
+                try{
+                    Object result = method_remove.invoke(mutantInstance,null);
+                    flag = addElements(result);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

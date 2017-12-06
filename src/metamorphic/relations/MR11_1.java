@@ -206,7 +206,7 @@ public class MR11_1 implements MetamorphicRelations {
 
     public static void main(String[] args) {
         MR11_1 mr = new MR11_1();
-        mr.testProgram("SimpleLinear",0);
+        mr.testProgram("SimpleTree",0);
     }
 
 

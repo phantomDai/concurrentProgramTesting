@@ -185,9 +185,9 @@ public class MR19_1 implements MetamorphicRelations {
 
     public static void main(String[] args) {
         MR19_1 mr = new MR19_1();
-        LogRecorder.creatTableAndTitle("FineGrainedHeap");
+        LogRecorder.creatTableAndTitle("SimpleTree");
         for (int i = 0; i < 1; i++) {
-            mr.testProgram("FineGrainedHeap",i);
+            mr.testProgram("SimpleTree",i);
         }
     }
 }

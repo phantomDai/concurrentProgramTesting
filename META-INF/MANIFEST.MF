@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Class-Path: lib\junit-4.12.jar lib\hamcrest-core-1.3.jar lib\jaxen-1.1
- .2.jar lib\jxl.jar lib\dom4j-1.6.1.jar lib\commons-lang3-3.6.jar
-Main-Class: test.priority.Main
+Class-Path: libs/jaxen-1.1.2.jar libs/jxl.jar libs/junit-4.12.jar libs
+ /hamcrest-core-1.3.jar libs/dom4j-1.6.1.jar libs/commons-lang3-3.6.ja
+ r
 

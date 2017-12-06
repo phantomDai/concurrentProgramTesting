@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 
+import static java.io.File.separator;
+
 public class MRKilledInfoRecorder {
     public MRKilledInfoRecorder() { }
 
@@ -17,7 +19,7 @@ public class MRKilledInfoRecorder {
      * @param numberOfKilled
      */
     public void write(String SUTName, String MRID, int numberOfKilled){
-        String path = System.getProperty("user.dir") + "\\datafile\\" + SUTName + ".txt" ;
+        String path = System.getProperty("user.dir") +separator +"datafile"+separator + SUTName + ".txt" ;
         String info = SUTName + "." + MRID + "." + String.valueOf(numberOfKilled);
         File file = new File(path);
         if(!file.exists()) {

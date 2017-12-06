@@ -5,10 +5,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import static java.io.File.separator;
+
 public class MutantBeKilledInfo {
     public static void change(String SUTName){
         for (int i = 0; i < 10; i++) {
-            String path = System.getProperty("user.dir")+"\\logfile\\mutantBekilledInfo_"+SUTName+String.valueOf(i)+".txt";
+            String path = System.getProperty("user.dir")+separator+"logfile"+separator+"mutantBekilledInfo_"+SUTName+String.valueOf(i)+".txt";
             File file = new File(path);
             if (!file.exists()){
                 System.out.println("文件不存在");

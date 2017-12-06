@@ -256,9 +256,9 @@ public class MR14 implements MetamorphicRelations {
 
     public static void main(String[] args) {
         MR14 mr = new MR14();
-        LogRecorder.creatTableAndTitle("FineGrainedHeap");
+        LogRecorder.creatTableAndTitle("SimpleTree");
         for (int i = 0; i < 1; i++) {
-            mr.testProgram("FineGrainedHeap",i);
+            mr.testProgram("SimpleTree",i);
         }
     }
 

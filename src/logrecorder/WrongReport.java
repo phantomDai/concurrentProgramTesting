@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 
+import static java.io.File.separator;
+
 public class WrongReport {
     public WrongReport() {}
 
@@ -18,7 +20,7 @@ public class WrongReport {
     public void writeLog(String mutantFullName,String info){
         String[] name = mutantFullName.split("\\.");
         String logname = name[1];
-        String path = System.getProperty("user.dir") + "\\logfile" + "\\" + logname + ".txt";
+        String path = System.getProperty("user.dir") + separator+"logfile" + separator + logname + ".txt";
         File file = new File(path);
         if(!file.exists()) {
             try {

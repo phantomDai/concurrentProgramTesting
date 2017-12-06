@@ -27,7 +27,7 @@ public class LogRecorder {
      * @param content 某一个序列在某一个待测程序下某一次循环的记录，是一个二维的列表
      */
     public void writeToEXCEL(String SUTName, int circleTimes, List<List<String>> content) {
-        String path = System.getProperty("user.dir") + separator+"logfile\\" + SUTName +".xls" ;
+        String path = System.getProperty("user.dir") + separator+"logfile"+separator + SUTName +".xls" ;
         File file = new File(path);
 
         try{
@@ -84,7 +84,7 @@ public class LogRecorder {
 
     }
     public static void creatTableAndTitle(String SUTName){
-        String path = System.getProperty("user.dir") + "\\logfile\\" + SUTName + ".xls";
+        String path = System.getProperty("user.dir") + separator+"logfile"+separator + SUTName + ".xls";
         File file = new File(path);
         if(!file.exists()){
             try{

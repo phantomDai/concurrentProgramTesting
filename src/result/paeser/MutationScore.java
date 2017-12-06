@@ -9,11 +9,13 @@ import java.io.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import static java.io.File.separator;
+
 public class MutationScore {
     public MutationScore() {}
 
     public void calculateMutationScore(String SUTName){
-        String path = System.getProperty("user.dir")+"\\logfile\\"+SUTName+".xls";
+        String path = System.getProperty("user.dir")+separator+"logfile"+separator+SUTName+".xls";
         File file = new File(path);
         if (!file.exists()){
             System.out.println("文件不存在！");
@@ -42,7 +44,7 @@ public class MutationScore {
             int total = ms.size();
             double score = temp / total ;
             //向文件中输出score
-            String outPath = System.getProperty("user.dir")+"\\logfile\\"+SUTName+"_mutationScore.txt" ;
+            String outPath = System.getProperty("user.dir")+separator+"logfile"+separator+SUTName+"_mutationScore.txt" ;
             File outfile = new File(outPath);
             if (!outfile.exists()){
                 outfile.createNewFile();

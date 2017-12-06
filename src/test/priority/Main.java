@@ -16,10 +16,10 @@ import java.util.List;
  */
 public class Main {
     public Main() {}
-    private static final int loops = 10;
+    private static final int loops = 1;
     public static void main(String[] args){
 //        String[] SUTName = {"SimpleLinear", "SimpleTree", "SequentialHeap", "SkipQueue","FineGrainedHeap"};
-        String[] SUTName = {"SimpleLinear"};
+        String[] SUTName = {"SimpleTree"};
         for (int i = 0; i < SUTName.length; i++) {
             LogRecorder.creatTableAndTitle(SUTName[i]);
         }

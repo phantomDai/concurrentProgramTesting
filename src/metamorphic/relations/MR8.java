@@ -271,7 +271,7 @@ public class MR8 implements MetamorphicRelations {
 
     public static void main(String[] args) {
         MR8 mr = new MR8();
-        mr.testProgram("SimpleLinear",0);
+        mr.testProgram("SimpleTree",0);
 //        int[] mylist = {17,18,19,20,21,22,23,24,25,26,27,28,29,30};
 //        int[] toplist = {17,18,19,20,21,22,23,24,25,26};
 //        int[] follow = mr.followUpList(mylist,toplist);

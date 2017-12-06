@@ -113,17 +113,17 @@ public class MR17 implements MetamorphicRelations {
                     totalTime = totalTime + (endTime - startTime) ;
 
 
-                    for (int k = 0; k < getlist.length; k++) {
-                        System.out.print(getlist[k]+",");
-                    }
-                    System.out.println();
-                    for (int k = 0; k < getlisttwo_1.length; k++) {
-                        System.out.print(getlisttwo_1[k]+",");
-                    }
-                    System.out.println();
-                    for (int k = 0; k < getlisttwo_2.length; k++) {
-                        System.out.print(getlisttwo_2[k]+",");
-                    }
+//                    for (int k = 0; k < getlist.length; k++) {
+//                        System.out.print(getlist[k]+",");
+//                    }
+//                    System.out.println();
+//                    for (int k = 0; k < getlisttwo_1.length; k++) {
+//                        System.out.print(getlisttwo_1[k]+",");
+//                    }
+//                    System.out.println();
+//                    for (int k = 0; k < getlisttwo_2.length; k++) {
+//                        System.out.print(getlisttwo_2[k]+",");
+//                    }
 
 
 
@@ -223,9 +223,9 @@ public class MR17 implements MetamorphicRelations {
 
     public static void main(String[] args) {
         MR17 mr = new MR17();
-        LogRecorder.creatTableAndTitle("FineGrainedHeap");
+        LogRecorder.creatTableAndTitle("SimpleTree");
         for (int i = 0; i < 1; i++) {
-            mr.testProgram("FineGrainedHeap",i);
+            mr.testProgram("SimpleTree",i);
         }
 //        Random random = new Random(1);
 //        int[] mylist = new int[1024];

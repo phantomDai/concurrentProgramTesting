@@ -4,11 +4,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.io.File.separator;
+
 public class MutantSet {
     private List<Mutant> mutants ;
     private static String MUTANT_PACKAGE = "" ;
     public MutantSet(String className) {
-        String mutantsPath = System.getProperty("user.dir") + "\\src\\mutants\\" + className;
+        String mutantsPath = System.getProperty("user.dir") + separator + "src"+separator+"mutants"+separator + className;
         MUTANT_PACKAGE = "mutants." + className;
         File file = new File(mutantsPath) ;
         Mutant mt ;
@@ -68,8 +70,7 @@ public class MutantSet {
 
     public static void main(String[] args) {
         MutantSet ms = new MutantSet("SimpleLinear");
-        System.out.println(ms.getMutantFullName(0));
-        System.out.println(ms.getMutantID(ms.getMutantFullName(0)));
+        System.out.println(ms.size());
 
     }
 

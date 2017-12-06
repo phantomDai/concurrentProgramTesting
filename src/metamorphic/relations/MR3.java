@@ -228,7 +228,7 @@ public class MR3 implements MetamorphicRelations {
 
     public static void main(String[] args) {
         MR3 mr = new MR3();
-        mr.testProgram("SimpleLinear",0);
+        mr.testProgram("SimpleTree",0);
     }
 
 

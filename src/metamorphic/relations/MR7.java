@@ -284,6 +284,6 @@ public class MR7 implements MetamorphicRelations {
     }
     public static void main(String[] args) {
         MR7 mr = new MR7();
-        mr.testProgram("SimpleLinear",0);
+        mr.testProgram("SimpleTree",0);
     }
 }

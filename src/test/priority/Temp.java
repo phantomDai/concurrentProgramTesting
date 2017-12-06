@@ -11,7 +11,9 @@ public class Temp {
     }
 
     public static void main(String[] args) {
-        Temp temp = new Temp();
+        int height = 15;
+        System.out.println(1 << 15);
+
     }
 
 

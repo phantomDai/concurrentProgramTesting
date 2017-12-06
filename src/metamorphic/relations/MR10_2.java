@@ -224,6 +224,6 @@ public class MR10_2 implements MetamorphicRelations {
 
     public static void main(String[] args) {
         MR10_2 mr = new MR10_2();
-        mr.testProgram("SimpleLinear",0);
+        mr.testProgram("SimpleTree",0);
     }
 }

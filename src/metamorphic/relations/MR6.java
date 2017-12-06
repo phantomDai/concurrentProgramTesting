@@ -39,8 +39,9 @@ public class MR6 implements MetamorphicRelations {
             }
             for (int j = 0; j < templength; j++) {
                 int tempitem = random.nextInt(toplist.length);
-                while (templist.contains(toplist[tempitem]))
+                while (templist.contains(toplist[tempitem])) {
                     tempitem = random.nextInt(toplist.length);
+                }
                 templist.add(toplist[tempitem]);
                 list.add(toplist[tempitem]);
             }
@@ -87,13 +88,6 @@ public class MR6 implements MetamorphicRelations {
                     templist.clear();
                     for (int h = 0; h < temp.length; h++) {
                         int data = random.nextInt(1024);
-//                        while (data <30){
-//                            if (templist.contains(data)){
-//                                data = random.nextInt(1024);
-//                            }else {
-//                                break;
-//                            }
-//                        }
                         templist.add(data);
                     }
                     for (int k = 0; k < templist.size(); k++) {
@@ -222,9 +216,9 @@ public class MR6 implements MetamorphicRelations {
 
     public static void main(String[] args) {
         MR6 mr = new MR6();
-        LogRecorder.creatTableAndTitle("SimpleLinear");
-        for (int i = 0; i < 20; i++) {
-            mr.testProgram("SimpleLinear",i);
+        LogRecorder.creatTableAndTitle("SimpleTree");
+        for (int i = 0; i < 10; i++) {
+            mr.testProgram("SimpleTree",i);
         }
 
     }

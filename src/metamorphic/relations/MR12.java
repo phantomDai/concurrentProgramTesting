@@ -207,26 +207,32 @@ public class MR12 implements MetamorphicRelations{
             }
         }
 
-
-
-        int[] temp = new int[followToplist.length + xliststar.size()];
-        for (int i = 0; i < temp.length; i++) {
-            if (i < xliststar.size()){
-                temp[i] = xliststar.get(i);
-            }else {
-                temp[i] = followToplist[i-xliststar.size()];
-            }
-        }
-        Arrays.sort(temp);//将xstar与followlist合并之后的排序结果
-        List<Integer> templist = Arrays.asList(ArrayUtils.toObject(temp));
         boolean flag = true ;//标志位如果符合蜕变关系则为true，否则为false
-        for (int i = 0; i < sourceToplist.length; i++) {
-            if (!templist.contains(sourceToplist[i])){
+
+        if (xliststar.size() == 0){//若xliststar是空集则判断sourcetoplist与followtoplist是否相同
+            if (Arrays.equals(sourceToplist,followToplist))
+                flag = true ;
+            else
                 flag = false ;
-                break;
+        }else {//若xliststar不是空集则判断sourcetoplist是否为followtoplist的子集
+            int[] temp = new int[followToplist.length + xliststar.size()];
+            for (int i = 0; i < temp.length; i++) {
+                if (i < xliststar.size()){
+                    temp[i] = xliststar.get(i);
+                }else {
+                    temp[i] = followToplist[i-xliststar.size()];
+                }
+            }
+            Arrays.sort(temp);//将xstar与followlist合并之后的排序结果
+            List<Integer> templist = Arrays.asList(ArrayUtils.toObject(temp));
+
+            for (int i = 0; i < sourceToplist.length; i++) {
+                if (!templist.contains(sourceToplist[i])){
+                    flag = false ;
+                    break;
+                }
             }
         }
-
         if (flag){
             return true;
         }else {
@@ -268,7 +274,7 @@ public class MR12 implements MetamorphicRelations{
         MR12 mr = new MR12();
         LogRecorder.creatTableAndTitle("FineGrainedHeap");
         for (int i = 0; i < 1; i++) {
-            mr.testProgram("FineGrainedHeap",i);
+            mr.testProgram("SimpleTree",i);
         }
 
     }

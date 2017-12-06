@@ -4,12 +4,14 @@ import set.mutants.MutantSet;
 
 import java.io.*;
 
+import static java.io.File.separator;
+
 public class MutantBeKilledInfo {
     public MutantBeKilledInfo() { }
 
 
     public void add(int loops,String SUTName,String MRName,String mutantName){
-        String path = System.getProperty("user.dir")+"\\logfile\\"+"mutantBekilledInfo_" + SUTName+String.valueOf(loops)+".txt";
+        String path = System.getProperty("user.dir")+separator+"logfile"+separator+"mutantBekilledInfo_" + SUTName+String.valueOf(loops)+".txt";
         File file = new File(path);
         if (!file.exists()){
             try{
